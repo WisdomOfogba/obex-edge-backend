@@ -75,7 +75,7 @@ async def process_and_save_alert(alert_data: AlertCreate, source: str):
                 })
                 print("Broadcasting alert to connected clients")
                 
-                await manager.broadcast(broadcast_message, user_id=alert_response.user_id)
+                await manager.send_to_user(broadcast_message, user_id=alert_response.user_id)
             except Exception as broadcast_error:
                 print(f"WebSocket broadcast error: {broadcast_error}")
 
@@ -91,15 +91,15 @@ async def process_and_save_alert(alert_data: AlertCreate, source: str):
                 
                 user = await auth_service.get_user_by_id(alert_response.user_id)
                 
-                # sent_sms = await send_sms(
-                #     phone_number=user.phone_number if user else None,
-                #     message=notification_message
-                # )
+                sent_sms = await send_sms(
+                    phone_number=user.phone_number if user else None,
+                    message=notification_message
+                )
 
-                # if sent_sms:
-                #     print(f"Notification SMS sent to {user.phone_number if user else 'unknown user'}")
-                # else:
-                #     print("Failed to send notification SMS")
+                if sent_sms:
+                    print(f"Notification SMS sent to {user.phone_number if user else 'unknown user'}")
+                else:
+                    print("Failed to send notification SMS")
 
                 sent_email = send_email(
                     to=user.email if user else None,

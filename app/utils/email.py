@@ -1,6 +1,7 @@
 import smtplib, ssl
 from email.message import EmailMessage
 from email.utils import formataddr
+import traceback
 from app.core.settings import settings
 
 sender_name = settings.smtp_name
@@ -23,4 +24,5 @@ def send_email(to: str, subject: str, body: str) -> bool:
         return True
     except Exception as e:
         print(f"Email error: {e}")
+        traceback.print_exc()
         return False

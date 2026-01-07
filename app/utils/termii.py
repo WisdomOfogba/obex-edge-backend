@@ -8,8 +8,14 @@ async def send_sms(phone_number: str, message: str) -> bool:
     """
 
     url = f"{settings.termii_base_url}/api/sms/send"
+    # Format phone number: remove leading 0 if present, then add +234
+    if phone_number.startswith("+234"):
+        formatted_number = phone_number
+    else:
+        formatted_number = f"+234{phone_number.lstrip('0')}"
+    
     payload = {
-        "to": phone_number,
+        "to": formatted_number,
         "from": settings.termii_sender_id,
         "sms": message,
         "type": "plain",
